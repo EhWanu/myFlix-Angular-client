@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { MovieSynopsisComponent } from '../movie-synopsis/movie-synopsis.component';
 import { MovieGenreComponent } from '../movie-genre/movie-genre.component';
+import { MovieDirectorComponent } from '../movie-director/movie-director.component';
 
 @Component({
   selector: 'app-movie-card',
@@ -43,5 +44,12 @@ export class MovieCardComponent implements OnInit {
       data: { name, description },
     });
   }
+
+  openDirectorDialog(name: string, bio: string, birth: string): void {
+    this.dialog.open(MovieDirectorComponent, {
+      data: { name, bio, birth },
+    });
+  }
+  
   
 }
