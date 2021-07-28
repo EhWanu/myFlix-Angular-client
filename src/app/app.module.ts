@@ -25,7 +25,9 @@ import { UserRegistrationFormComponent } from './user-registration-form/user-reg
 import { UserLoginFormComponent } from './user-login-form/user-login-form.component';
 import { MovieCardComponent } from './movie-card/movie-card.component';
 import { WelcomePageComponent } from './welcome-page/welcome-page.component';
-import { MovieSynopsisComponent } from './movie-synopsis/movie-synopsis.component'
+import { MovieSynopsisComponent } from './movie-synopsis/movie-synopsis.component';
+import { MovieGenreComponent } from './movie-genre/movie-genre.component'
+
 
 
 const appRoutes: Routes = [
@@ -43,6 +45,7 @@ const appRoutes: Routes = [
     MovieCardComponent,
     WelcomePageComponent,
     MovieSynopsisComponent,
+    MovieGenreComponent,
   ],
   imports: [
     RouterModule.forRoot(appRoutes),
