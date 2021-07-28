@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { GetMoviesService } from '../fetch-api-data.service';
+import { Router } from '@angular/router';
+// Service that contains backend logic
+import { FetchApiDataService } from '../fetch-api-data.service';
+// Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+// Components
 import { MovieSynopsisComponent } from '../movie-synopsis/movie-synopsis.component';
-import { MovieGenreComponent } from '../movie-genre/movie-genre.component';
 import { MovieDirectorComponent } from '../movie-director/movie-director.component';
+import { MovieGenreComponent } from '../movie-genre/movie-genre.component';
 
 @Component({
   selector: 'app-movie-card',
@@ -14,8 +17,9 @@ import { MovieDirectorComponent } from '../movie-director/movie-director.compone
 })
 export class MovieCardComponent implements OnInit {
   movies: any[] = [];
+
   constructor(
-    public fetchApiData: GetMoviesService,
+    public fetchApiData: FetchApiDataService,
     public dialog: MatDialog,
     public snackBar: MatSnackBar,
     private router: Router
@@ -25,17 +29,40 @@ export class MovieCardComponent implements OnInit {
     this.getMovies();
   }
 
+  // Fetches all movies from API
   getMovies(): void {
     this.fetchApiData.getAllMovies().subscribe((resp: any) => {
       this.movies = resp;
-      console.log(this.movies);
       return this.movies;
     });
   }
 
+  // Adds movie to user's list of favorites
+  onAddFavoriteMovie(id: string): void {
+    this.fetchApiData.addFavorite(id).subscribe((response: any) => {
+      console.log(response);
+      this.snackBar.open('Added to favorites!', 'OK', {
+        duration: 2000,
+      });
+    });
+  }
+
+  onLogout(): void {
+    this.fetchApiData.logout();
+    this.router.navigate(['/welcome']);
+  }
+
+  // Modal with movie description
   openSynopsisDialog(synopsis: string): void {
     this.dialog.open(MovieSynopsisComponent, {
       data: { synopsis },
+    });
+  }
+
+  // Modal with movie director information
+  openDirectorDialog(name: string, bio: string, birth: string): void {
+    this.dialog.open(MovieDirectorComponent, {
+      data: { name, bio, birth },
     });
   }
 
@@ -45,11 +72,13 @@ export class MovieCardComponent implements OnInit {
     });
   }
 
-  openDirectorDialog(name: string, bio: string, birth: string): void {
-    this.dialog.open(MovieDirectorComponent, {
-      data: { name, bio, birth },
+  refresh(): void {
+    this.router.navigate(['/movies']).then(() => {
+      window.location.reload();
     });
   }
-  
-  
+
+  logoutUser(): void {
+    localStorage.clear();
+  }
 }

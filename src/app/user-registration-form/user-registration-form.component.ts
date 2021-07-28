@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-
-// Backend logic for registering new user
-import { UserRegistrationService } from '../fetch-api-data.service';
+// Contains backend logic for registering new user
+import { FetchApiDataService } from '../fetch-api-data.service';
 // Closes dialog on success
 import { MatDialogRef } from '@angular/material/dialog';
 // Displays notifications
@@ -13,10 +12,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./user-registration-form.component.scss'],
 })
 export class UserRegistrationFormComponent implements OnInit {
+  isLoading = false;
+
   @Input() userData = { Username: '', Password: '', Email: '', Birthday: '' };
 
   constructor(
-    public fetchApiData: UserRegistrationService,
+    public fetchApiData: FetchApiDataService,
     public dialogRef: MatDialogRef<UserRegistrationFormComponent>,
     public snackBar: MatSnackBar
   ) {}
@@ -25,17 +26,18 @@ export class UserRegistrationFormComponent implements OnInit {
 
   // This is the function responsible for sending the form inputs to the backend
   registerUser(): void {
-    this.fetchApiData.userRegistration(this.userData).subscribe(
+    this.isLoading = true;
+    this.fetchApiData.createAccount(this.userData).subscribe(
       (response) => {
-        // Logic for a successful user registration goes here! (To be implemented)
+        // Logic for a successful user registration goes here!
+        this.isLoading = false;
         this.dialogRef.close(); // This will close the modal on success!
-        console.log(response);
         this.snackBar.open(response, 'OK', {
           duration: 2000,
         });
       },
       (response) => {
-        console.log(response);
+        this.isLoading = false;
         this.snackBar.open(response, 'OK', {
           duration: 2000,
         });

@@ -1,39 +1,26 @@
-import { Component } from '@angular/core';
-import { UserRegistrationFormComponent } from './user-registration-form/user-registration-form.component';
-import { UserLoginFormComponent } from './user-login-form/user-login-form.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MovieCardComponent } from './movie-card/movie-card.component';
+import { Component, OnInit, Renderer2 } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  title = 'myFightFlix-angular-client';
+export class AppComponent implements OnInit {
+  title = 'myFlix-Angular-client';
+  toggleTheme = new FormControl(false);
 
-  constructor(public dialog: MatDialog) {}
-  // Opens dialog when 'Sign Up' button is clicked
-  openUserRegistrationDialog(): void {
-    this.dialog.open(UserRegistrationFormComponent, {
-      // Dialog box width
-      width: '280px',
+  constructor(private _renderer: Renderer2) {}
+
+  ngOnInit() {
+    this.toggleTheme.valueChanges.subscribe((toggleValue) => {
+      if (toggleValue === true) {
+        this._renderer.addClass(document.body, 'dark-theme');
+        this._renderer.removeClass(document.body, 'light-theme');
+      } else {
+        this._renderer.addClass(document.body, 'light-theme');
+        this._renderer.removeClass(document.body, 'dark-theme');
+      }
     });
   }
-
-  openUserLoginDialog(): void {
-    // Opens dialog when 'Login' button is clicked
-    this.dialog.open(UserLoginFormComponent, {
-      // Dialog box width
-      width: '280px',
-    });
-  }
-
-  openMoviesDialog(): void {
-    this.dialog.open(MovieCardComponent, {
-      width: '500px'
-    });
-  }
-
-  
 }

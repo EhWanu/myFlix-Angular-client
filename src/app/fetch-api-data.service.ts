@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { catchError } from 'rxjs/internal/operators';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpErrorResponse,
+} from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
-
 
 
 //Declaring the api url that will provide data for the client app
@@ -14,67 +18,47 @@ const apiUrl = 'https://camsmyflic.herokuapp.com/';
 @Injectable({
   providedIn: 'root',
 })
-export class UserRegistrationService {
-  constructor(private http: HttpClient) {}
+export class FetchApiDataService {
+  private isAuthenticated: boolean = false;
+  private token: string = '';
 
-  // API Call
-  public userRegistration(userDetails: any): Observable<any> {
-    console.log(userDetails);
-    return this.http
-      .post(apiUrl + 'users', userDetails)
-      .pipe(catchError(this.handleError));
+  constructor(private http: HttpClient, private router: Router) {}
+
+  // Returns token in local storage
+  getToken() {
+    return this.token;
   }
 
-  // Error Handling
-  private handleError(error: HttpErrorResponse): any {
-    if (error.error instanceof ErrorEvent) {
-      console.error('Some error occurred:', error.error.message);
-    } else {
-      console.error(
-        `Error Status code ${error.status}, ` + `Error body is: ${error.error}`
-      );
-    }
-    return throwError('Something bad happened; please try again later.');
+  // Returns boolean of whether user is authenticated
+  getIsAuth() {
+    return this.isAuthenticated;
   }
-}
 
-// User Login
-@Injectable({
-  providedIn: 'root',
-})
-export class UserLoginService {
-  constructor(private http: HttpClient) {}
+  setAuth() {
+    return (this.isAuthenticated = true);
+  }
 
-  // API Call
-  public userLogin(userDetails: any): Observable<any> {
-    console.log(userDetails);
+  // Returns username of active session
+  getUsername() {
+    const username = localStorage.getItem('user');
+    return username;
+  }
+
+  // Logout
+  logout(): void {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+  }
+
+  // API call to login user
+  login(userDetails: any): Observable<any> {
+    this.isAuthenticated = true;
     return this.http
       .post(apiUrl + 'login', userDetails)
       .pipe(catchError(this.handleError));
   }
 
-  // Error Handling
-  private handleError(error: HttpErrorResponse): any {
-    if (error.error instanceof ErrorEvent) {
-      console.error('Some error occurred:', error.error.message);
-    } else {
-      console.error(
-        `Error Status code ${error.status}, ` + `Error body is: ${error.error}`
-      );
-    }
-    return throwError('Something bad happened; please try again later.');
-  }
-}
-
-// Get User Information
-// NOTE: This route returns user's favorite movies
-@Injectable({
-  providedIn: 'root',
-})
-export class GetUserService {
-  constructor(private http: HttpClient) {}
-
-  // API Call
+  // API call to get user account information
   getUser(): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
@@ -86,34 +70,16 @@ export class GetUserService {
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
-  // Response Extraction
-  private extractResponseData(res: Response | Object): Response | Object {
-    const body = res;
-    return body || {};
+  // API call to register new user account
+  createAccount(userDetails: any): Observable<any> {
+    console.log(userDetails);
+    return this.http
+      .post(apiUrl + 'users', userDetails)
+      .pipe(catchError(this.handleError));
   }
 
-  // Error Handling
-  private handleError(error: HttpErrorResponse): any {
-    if (error.error instanceof ErrorEvent) {
-      console.error('Some error occurred:', error.error.message);
-    } else {
-      console.error(
-        `Error Status code ${error.status}, ` + `Error body is: ${error.error}`
-      );
-    }
-    return throwError('Something bad happened; please try again later.');
-  }
-}
-
-// Update User Information
-@Injectable({
-  providedIn: 'root',
-})
-export class EditUserService {
-  constructor(private http: HttpClient) {}
-
-  // API Call
-  editUser(): Observable<any> {
+  // API call to edit user account details
+  editAccount(): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
       .put(apiUrl + 'users/:Username', {
@@ -124,34 +90,8 @@ export class EditUserService {
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
-  //  Response Extraction
-  private extractResponseData(res: Response | Object): Response | Object {
-    const body = res;
-    return body || {};
-  }
-
-  // Error Handling
-  private handleError(error: HttpErrorResponse): any {
-    if (error.error instanceof ErrorEvent) {
-      console.error('Some error occurred:', error.error.message);
-    } else {
-      console.error(
-        `Error Status code ${error.status}, ` + `Error body is: ${error.error}`
-      );
-    }
-    return throwError('Something bad happened: please try again later.');
-  }
-}
-
-// Delete User Account
-@Injectable({
-  providedIn: 'root',
-})
-export class DeleteUserService {
-  constructor(private http: HttpClient) {}
-
-  // API Call
-  deleteUser(): Observable<any> {
+  // API call to remove user's account
+  removeAccount(): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
       .delete(apiUrl + 'users/:Username', {
@@ -162,110 +102,7 @@ export class DeleteUserService {
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
-  // Response Extraction
-  private extractResponseData(res: Response | Object): Response | Object {
-    const body = res;
-    return body || {};
-  }
-
-  // Error Handling
-  private handleError(error: HttpErrorResponse): any {
-    if (error.error instanceof ErrorEvent) {
-      console.error('Some error occurred:', error.error.message);
-    } else {
-      console.error(
-        `Error Status code ${error.status}, ` + `Error body is: ${error.error}`
-      );
-    }
-    return throwError('Something bad happened: please try again later.');
-  }
-}
-
-// Add Movie To User's Favorites
-@Injectable({
-  providedIn: 'root',
-})
-export class AddFavoriteMovieService {
-  constructor(private http: HttpClient) {}
-
-  // API Call
-  addFavoriteMovie(): Observable<any> {
-    const token = localStorage.getItem('token');
-    return this.http
-      .post(apiUrl + 'users/:Username/:MovieID', {
-        headers: new HttpHeaders({
-          Authorization: 'Bearer ' + token,
-        }),
-      })
-      .pipe(map(this.extractResponseData), catchError(this.handleError));
-  }
-
-  // Response Extraction
-  private extractResponseData(res: Response | Object): Response | Object {
-    const body = res;
-    return body || {};
-  }
-
-  // Error Handling
-  private handleError(error: HttpErrorResponse): any {
-    if (error.error instanceof ErrorEvent) {
-      console.error('Some error occurred:', error.error.message);
-    } else {
-      console.error(
-        `Error Status code ${error.status}, ` + `Error body is: ${error.error}`
-      );
-    }
-    return throwError('Something bad happened: please try again later.');
-  }
-}
-
-// Remove Movie From User's Favorites
-@Injectable({
-  providedIn: 'root',
-})
-export class RemoveFavoriteMovieService {
-  constructor(private http: HttpClient) {}
-
-  // API Call
-  addFavoriteMovie(): Observable<any> {
-    const token = localStorage.getItem('token');
-    return this.http
-      .delete(apiUrl + 'users/:Username/:MovieID', {
-        headers: new HttpHeaders({
-          Authorization: 'Bearer ' + token,
-        }),
-      })
-      .pipe(map(this.extractResponseData), catchError(this.handleError));
-  }
-
-  // Response Extraction
-  private extractResponseData(res: Response | Object): Response | Object {
-    const body = res;
-    return body || {};
-  }
-
-  // Error Handling
-  private handleError(error: HttpErrorResponse): any {
-    if (error.error instanceof ErrorEvent) {
-      console.error('Some error occurred:', error.error.message);
-    } else {
-      console.error(
-        `Error Status code ${error.status}, ` + `Error body is: ${error.error}`
-      );
-    }
-    return throwError('Something bad happened: please try again later.');
-  }
-}
-
-
-// Get All Movies
-@Injectable({
-  providedIn: 'root',
-})
-export class GetMoviesService {
-  constructor(private http: HttpClient) {}
-
-  // API Call
+  // API call to fetch all movies in database
   getAllMovies(): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
@@ -277,34 +114,8 @@ export class GetMoviesService {
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
-  //  Response Extraction
-  private extractResponseData(res: Response | Object): Response | Object {
-    const body = res;
-    return body || {};
-  }
-
-  // Error Handling
-  private handleError(error: HttpErrorResponse): any {
-    if (error.error instanceof ErrorEvent) {
-      console.error('Some error occurred:', error.error.message);
-    } else {
-      console.error(
-        `Error Status code ${error.status}, ` + `Error body is: ${error.error}`
-      );
-    }
-    return throwError('Something bad happened; please try again later.');
-  }
-}
-
-// Get Single Movie
-@Injectable({
-  providedIn: 'root',
-})
-export class GetMovieByTitleService {
-  constructor(private http: HttpClient) {}
-
-  // API Call
-  getAllMovies(): Observable<any> {
+  // API call to get movie by title
+  getSingleMovie(): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
       .get(apiUrl + 'movies/:MovieID', {
@@ -315,33 +126,7 @@ export class GetMovieByTitleService {
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
-  // Response Extraction
-  private extractResponseData(res: Response | Object): Response | Object {
-    const body = res;
-    return body || {};
-  }
-
-  // Error Handling
-  private handleError(error: HttpErrorResponse): any {
-    if (error.error instanceof ErrorEvent) {
-      console.error('Some error occurred:', error.error.message);
-    } else {
-      console.error(
-        `Error Status code ${error.status}, ` + `Error body is: ${error.error}`
-      );
-    }
-    return throwError('Something bad happened; please try again later.');
-  }
-}
-
-// Get Director Information
-@Injectable({
-  providedIn: 'root',
-})
-export class GetDirectorService {
-  constructor(private http: HttpClient) {}
-
-  // API Call
+  // API call to get director information
   getDirector(): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
@@ -353,33 +138,7 @@ export class GetDirectorService {
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
-  // Non-Typed Response Extraction
-  private extractResponseData(res: Response | Object): Response | Object {
-    const body = res;
-    return body || {};
-  }
-
-  // Error Handling
-  private handleError(error: HttpErrorResponse): any {
-    if (error.error instanceof ErrorEvent) {
-      console.error('Some error occurred:', error.error.message);
-    } else {
-      console.error(
-        `Error Status code ${error.status}, ` + `Error body is: ${error.error}`
-      );
-    }
-    return throwError('Something bad happened: please try again later.');
-  }
-}
-
-// Get Genre Information
-@Injectable({
-  providedIn: 'root',
-})
-export class GetGenreService {
-  constructor(private http: HttpClient) {}
-
-  // API Call
+  // API call to get genre information
   getGenre(): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
@@ -391,14 +150,39 @@ export class GetGenreService {
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
-  //  Response Extraction
-  private extractResponseData(res: Response | Object): Response | Object {
+  // API call to add movie to user's list of favorites
+  addFavorite(id: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('user');
+    return this.http
+      .post(apiUrl + `users/${username}/${id}`, id, {
+        headers: new HttpHeaders({
+          Authorization: 'Bearer ' + token,
+        }),
+      })
+      .pipe(map(this.extractResponseData), catchError(this.handleError));
+  }
+
+  // API call to remove movie from user's list of favorites
+  removeFavorite(): Observable<any> {
+    const token = localStorage.getItem('token');
+    return this.http
+      .delete(apiUrl + 'users/:Username/:MovieID', {
+        headers: new HttpHeaders({
+          Authorization: 'Bearer ' + token,
+        }),
+      })
+      .pipe(map(this.extractResponseData), catchError(this.handleError));
+  }
+
+  // Non-Typed Response Extraction
+  extractResponseData(res: Response | Object): Response | Object {
     const body = res;
     return body || {};
   }
 
   // Error Handling
-  private handleError(error: HttpErrorResponse): any {
+  handleError(error: HttpErrorResponse): any {
     if (error.error instanceof ErrorEvent) {
       console.error('Some error occurred:', error.error.message);
     } else {
@@ -406,6 +190,6 @@ export class GetGenreService {
         `Error Status code ${error.status}, ` + `Error body is: ${error.error}`
       );
     }
-    return throwError('Something bad happened: please try again later.');
+    return throwError('Unexpected Error: Please try again');
   }
 }
