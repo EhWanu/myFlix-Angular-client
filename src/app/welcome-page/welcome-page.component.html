@@ -1,6 +1,7 @@
-<div class="main-page">
+<div class="welcome-container">
+  <div class="welcome-title">
     <h1>
-      Welcome to myFlix!
+      Welcome to myFlix
     </h1>
   </div>
   <div class="btn-container">
@@ -8,10 +9,17 @@
       mat-raised-button
       (click)="openUserRegistrationDialog()"
       color="primary"
+      aria-label="Sign up button"
     >
       Sign Up
     </button>
-    <button mat-raised-button (click)="openUserLoginDialog()" color="primary">
+    <button
+      mat-raised-button
+      (click)="openUserLoginDialog()"
+      color="accent"
+      aria-label="Login button"
+    >
       Login
     </button>
   </div>
+</div>
