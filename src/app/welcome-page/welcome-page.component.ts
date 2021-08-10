@@ -13,6 +13,11 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./welcome-page.component.scss']
 })
 export class WelcomePageComponent implements OnInit {
+
+  /**
+   *
+   * @param dialog
+   */
   constructor(public dialog: MatDialog) { }
   ngOnInit(): void {
   }

@@ -24,6 +24,12 @@ export class UserProfileComponent implements OnInit {
   movies: any = [];
   favorites: any = [];
 
+  /**
+   * @param fetchApiData
+   * @param dialog
+   * @param snackBar
+   * @param router
+   */
   constructor(
     public fetchApiData: FetchApiDataService,
     public dialog: MatDialog,
@@ -73,7 +79,9 @@ export class UserProfileComponent implements OnInit {
   }
 
   /**
-   * filter in all movies for user favorites
+   * removes movie from user's list of favorites
+   * @param movie_id
+   * @returns
    */
   filterFavorites(): void {
     this.movies.forEach((movie: any) => {
