@@ -4,9 +4,23 @@
     height: 100%;
     text-align: center;
     background: black;
+    align-items: center;
+    justify-content: center;
+    // position: relative;
   }
-  
+
+  .background-container {
+      box-sizing: border-box;
+      justify-content: center;
+      align-items: center;
+      margin-right: 35%;
+      margin-left: 35%;
+      border-color: gray;
+      height: 80%;
+  }
+
   .welcome-title {
+    margin-top: 48px;
     margin-bottom: 48px;
     color: white;
   }
@@ -17,7 +31,7 @@
     font-weight: 500;
   }
   
-    // button
+    
     .btn-container {
         // border: none;  
         text-align: center;
@@ -28,15 +42,19 @@
       }
 
       button {
-        // position: 
+        margin-right: 10px;
+        margin-left: 10px;
+        border-radius: 20px;
         font-size: 2em;
         padding: 5px 15px 5px 10px;
         border: none;
       }
 
       button:hover {
-        box-shadow: 0px 0px 50px 0px rgb(228, 55, 12);
-        transition: .8s ease-in-out;
+        font-weight: bold;
+        background-color: #a80306;
+        box-shadow: 0px 0px 50px 0px #ee292c;
+        transition: .3s ease-in-out;
         }
       
 
