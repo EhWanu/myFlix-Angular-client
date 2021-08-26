@@ -1,38 +1,151 @@
+@import "~@angular/material/theming";
 
+// Be sure that you only ever include 'mat-core' mixin once!
+// it should not be included for each theme.
+@include mat-core();
 
-@use '~@angular/material' as mat;
-// Plus imports for other components in your app.
+// define a real custom palette (using http://mcg.mbitson.com)
+$bv-primary: (
+  50: #c0ddd0,
+  100: #95b8a9,
+  200: #87af9e,
+  300: #678f7e,
+  400: #608877,
+  500: #5c8574,
+  600: #547969,
+  700: #58806f,
+  800: #456859,
+  900: #3f6153,
+  A100: #ffffff,
+  A200: #ffffff,
+  A400: #fdfcff,
+  A700: #ebe3ff,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000,
+  ),
+);
 
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
-@include mat.core();
+$bv-accent: (
+  50: #b40003,
+  100: #af0003,
+  200: #aa0003,
+  300: #a70003,
+  400: #a30003,
+  500: #a00003,
+  600: #990003,
+  700: #970003,
+  800: #950002,
+  900: #920002,
+  A100: #ffffff,
+  A200: #f9fdff,
+  A400: #c6e7ff,
+  A700: #addcff,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000,
+  ),
+);
 
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$myFlix-Angular-client-primary: mat.define-palette(mat.$indigo-palette);
-$myFlix-Angular-client-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$bv-warn: (
+  50: #fef0f4,
+  100: #fed9e3,
+  200: #fdc0d0,
+  300: #fca7bd,
+  400: #fb94af,
+  500: #fa81a1,
+  600: #f97999,
+  700: #f96e8f,
+  800: #f86485,
+  900: #f65174,
+  A100: #ffffff,
+  A200: #ffffff,
+  A400: #ffeef1,
+  A700: #ffd4dd,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #000000,
+    600: #000000,
+    700: #000000,
+    800: #000000,
+    900: #000000,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000,
+  ),
+);
 
-// The warn palette is optional (defaults to red).
-$myFlix-Angular-client-warn: mat.define-palette(mat.$red-palette);
+// mandatory stuff for theming
+$bv-palette-primary: mat-palette($bv-primary);
+$bv-palette-accent: mat-palette($bv-accent);
+$bv-palette-warn: mat-palette($bv-warn);
 
-// Create the theme object. A theme consists of configurations for individual
-// theming systems such as "color" or "typography".
-$myFlix-Angular-client-theme: mat.define-light-theme((
-  color: (
-    primary: $myFlix-Angular-client-primary,
-    accent: $myFlix-Angular-client-accent,
-    warn: $myFlix-Angular-client-warn,
-  )
-));
+// include the custom theme components into a theme object
+$bv-theme: mat-light-theme(
+  $bv-palette-primary,
+  $bv-palette-accent,
+  $bv-palette-warn
+);
 
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
-@include mat.all-component-themes($myFlix-Angular-client-theme);
+// include the custom theme object into the angular material theme
+@include angular-material-theme($bv-theme);
 
-/* You can add global styles to this file, and also import other style files */
+// Global Defaults
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap");
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Libre Baskerville", sans-serif;
+  box-sizing: border-box;
+  // background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
+  //   url(./assets/sparkles.jpg) no-repeat center center;
+  background-attachment: fixed;
+  background-size: cover;
+  font-size: 20px;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: inherit;
+}
+
+h1 {
+  color: white;
+  text-shadow: 1px 1px white;
+}

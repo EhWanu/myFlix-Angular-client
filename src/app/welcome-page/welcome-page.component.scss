@@ -17,16 +17,28 @@
     font-weight: 500;
   }
   
-  button {
-    margin-right: 30px;
-    font-size: 1.2em;
-    // padding: 5px 10px 5px 10px;
-    // border: none;
-  }
+    // button
+    .btn-container {
+        // border: none;  
+        text-align: center;
+        color: white;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+      }
+
+      button {
+        // position: 
+        font-size: 2em;
+        padding: 5px 15px 5px 10px;
+        border: none;
+      }
+
+      button:hover {
+        box-shadow: 0px 0px 50px 0px rgb(228, 55, 12);
+        transition: .8s ease-in-out;
+        }
+      
+
   
-  // button
-  .btn-container {
-    // border: none;  
-    text-align: center;
-    color: white;
-  }
+  
